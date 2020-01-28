@@ -35,7 +35,7 @@ def main():
     args = parser.parse_args()
     print(f"The files are in - {args.dpath}")
     for f in list_files(args.dpath):
-        init_df = get_initial_data_frame(args.dpath, "per12-18.txt")
+        init_df = get_initial_data_frame(args.dpath, f)
         init_df.fillna(0, inplace=True)
         print(f"The present df from {f} file {init_df.shape} shape")
         
@@ -46,7 +46,6 @@ def main():
         init_df["ACCOUNT_NUMBER"] = acc_num.astype(int)
         processed_df = init_df[init_df["ACCOUNT_NUMBER"].isin(INTERESTING_ACCS)]
         print(f"The processed df from {f} file {processed_df.shape} shape")
-        break
 
 
 if __name__ == "__main__":
