@@ -47,8 +47,6 @@ def main():
         processed_df = init_df[init_df["ACCOUNT_NUMBER"].isin(INTERESTING_ACCS)]
         print(f"The processed df from {f} file {processed_df.shape} shape")
 
-        break
-
 
 if __name__ == "__main__":
     main()
