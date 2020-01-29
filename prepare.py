@@ -41,7 +41,7 @@ def main():
         
         segments = pd.Series(init_df["CONCATENATED_SEGMENTS"]).str.split(".")
         le = segments.str[0]
-        acc_num = segments.str[3]
+        acc_num = segments.str[2]
         init_df["LEGAL_ENTITY"] = le.astype(float)
         init_df["ACCOUNT_NUMBER"] = acc_num.astype(int)
         processed_df = init_df[init_df["ACCOUNT_NUMBER"].isin(INTERESTING_ACCS)]
