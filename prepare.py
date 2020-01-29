@@ -35,7 +35,8 @@ def main():
     args = parser.parse_args()
     print(f"The files are in - {args.dpath}")
 
-    processed_df_buffer = []
+    outputfile = "final_data.csv"
+    turn = 0
 
     for f in list_files(args.dpath):
         init_df = get_initial_data_frame(args.dpath, f)
@@ -65,11 +66,12 @@ def main():
 
         print(f"Result Data dimension {result_data.shape}")
 
-        print("Adding to processed DF buffer")
-        processed_df_buffer.append(result_data)
-    
-    final_df = pd.concat(processed_df_buffer, axis=0)
-    print(f"The dimension of the final DF {final_df.shape}")
+        if turn == 0:
+            result_data.to_csv(outputfile, index=False)
+            turn += 1
+        else:
+            result_data.to_csv(outputfile, mode='a', header=False, index=False)
+        print(f"Wrote output to {outputfile}")
 
 if __name__ == "__main__":
     main()
