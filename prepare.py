@@ -34,6 +34,9 @@ def get_initial_data_frame(dir_path, f_path) -> pd.DataFrame:
 def main():
     args = parser.parse_args()
     print(f"The files are in - {args.dpath}")
+
+    processed_df_buffer = []
+
     for f in list_files(args.dpath):
         init_df = get_initial_data_frame(args.dpath, f)
         init_df.fillna(0, inplace=True)
@@ -53,10 +56,20 @@ def main():
         result_data["ACCOUNTED_BAL_USD"] = result_data["ACCOUNTED_CR_USD"] - result_data["ACCOUNTED_DR_USD"]
 
         result_data["LAST_UPDATE_DATE"] = pd.to_datetime(result_data["LAST_UPDATE_DATE"]).dt.date
+        result_data.dropna(inplace=True)
 
         result_data.drop(['PERIOD_NAME', 'CONCATENATED_SEGMENTS', 'EOP_RATE', 'ACCOUNTED_DR', 'ACCOUNTED_CR', 'LEGAL_ENTITY', 'TO_CURRENCY_CODE', 'ACCOUNTED_DR_USD', 'ACCOUNTED_CR_USD'], axis=1, inplace=True)
 
+        if "BAL.ACCOUNTED_DR-BAL.ACCOUNTED_CR" in result_data.columns:
+            result_data.drop(["BAL.ACCOUNTED_DR-BAL.ACCOUNTED_CR"], axis=1, inplace=True)
+
         print(f"Result Data dimension {result_data.shape}")
+
+        print("Adding to processed DF buffer")
+        processed_df_buffer.append(result_data)
+    
+    final_df = pd.concat(processed_df_buffer, axis=0)
+    print(f"The dimension of the final DF {final_df.shape}")
 
 if __name__ == "__main__":
     main()
