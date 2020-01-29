@@ -8,7 +8,7 @@ import pandas as pd
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument("dpath", type=str)
 
-INTERESTING_ACCS = [4004, 4603, 4654, 5001, 5017, 5201, 5211, 5293, 5575, 5401, 5476]
+INTERESTING_ACCS = ["4004", "4603", "4654", "5001", "5017", "5201", "5211", "5293", "5575", "5401", "5476"]
 
 le_curr = pd.read_excel("Sample/LE _ currencies.xlsx")
 le_curr = le_curr.rename(columns={"Legal Entity Number": "LEGAL_ENTITY", "Functional Currency": "TO_CURRENCY_CODE"})
@@ -43,7 +43,7 @@ def main():
         le = segments.str[0]
         acc_num = segments.str[2]
         init_df["LEGAL_ENTITY"] = le.astype(float)
-        init_df["ACCOUNT_NUMBER"] = acc_num.astype(int)
+        init_df["ACCOUNT_NUMBER"] = acc_num.astype(str)
         processed_df = init_df[init_df["ACCOUNT_NUMBER"].isin(INTERESTING_ACCS)]
         print(f"The processed df from {f} file {processed_df.shape} shape")
 
