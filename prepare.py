@@ -47,6 +47,16 @@ def main():
         processed_df = init_df[init_df["ACCOUNT_NUMBER"].isin(INTERESTING_ACCS)]
         print(f"The processed df from {f} file {processed_df.shape} shape")
 
+        result_data = pd.merge(init_df, le_eop_rates, left_on = ["LEGAL_ENTITY", "PERIOD_NAME"], right_on=["LEGAL_ENTITY", "PERIOD_NAME"], how = 'left')
+        result_data["ACCOUNTED_DR_USD"] = (result_data["ACCOUNTED_DR"] / result_data["EOP_RATE"]).round(2)
+        result_data["ACCOUNTED_CR_USD"] = (result_data["ACCOUNTED_CR"] / result_data["EOP_RATE"]).round(2)
+        result_data["ACCOUNTED_BAL_USD"] = result_data["ACCOUNTED_CR_USD"] - result_data["ACCOUNTED_DR_USD"]
+
+        result_data["LAST_UPDATE_DATE"] = pd.to_datetime(result_data["LAST_UPDATE_DATE"]).dt.date
+
+        result_data.drop(['PERIOD_NAME', 'CONCATENATED_SEGMENTS', 'EOP_RATE', 'ACCOUNTED_DR', 'ACCOUNTED_CR', 'LEGAL_ENTITY', 'TO_CURRENCY_CODE', 'ACCOUNTED_DR_USD', 'ACCOUNTED_CR_USD'], axis=1, inplace=True)
+
+        print(f"Result Data dimension {result_data.shape}")
 
 if __name__ == "__main__":
     main()
